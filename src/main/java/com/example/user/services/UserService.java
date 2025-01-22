@@ -1,5 +1,6 @@
 package com.example.user.services;
 
+import com.example.user.dtos.UserDTO;
 import com.example.user.entities.User;
 import com.example.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserDTO findByUsername(String username) {
+        User user = userRepository.findByUsername(username).get();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setRole(user.getRole());
+        return userDTO;
+    }
 
 }
