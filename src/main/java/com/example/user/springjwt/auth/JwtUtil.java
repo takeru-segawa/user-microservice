@@ -23,7 +23,6 @@ public class JwtUtil {
 
     public String generateToken(String username) {
         try {
-            // Sử dụng phương pháp cơ bản
             return Jwts.builder()
                     .setSubject(username)
                     .setIssuedAt(new Date(System.currentTimeMillis()))

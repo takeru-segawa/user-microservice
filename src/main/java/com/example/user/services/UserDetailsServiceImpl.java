@@ -34,4 +34,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .authorities(Collections.singletonList(authority))
                 .build();
     }
+
+    public UserDetails loadUserById(String id) throws UsernameNotFoundException {
+        System.out.println("Loading user by ID: " + id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User  not found"));
+
+        System.out.println("User  found: " + user.getUsername());
+        System.out.println("Encoded password: " + user.getPassword());
+
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(Collections.singletonList(authority))
+                .build();
+    }
 }
