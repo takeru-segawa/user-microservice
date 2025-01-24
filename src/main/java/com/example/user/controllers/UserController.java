@@ -1,5 +1,6 @@
 package com.example.user.controllers;
 
+import com.example.user.dtos.AuthResponse;
 import com.example.user.entities.User;
 import com.example.user.services.UserService;
 import com.example.user.springjwt.auth.JwtUtil;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -29,13 +31,20 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
+    public ResponseEntity<AuthResponse> register(@RequestBody User user) {
         try {
             userService.register(user);
-            return ResponseEntity.ok("User registered successfully");
+
+            AuthResponse authResponse = new AuthResponse();
+            authResponse.setStatus(HttpStatus.OK.value());
+            authResponse.setMessage("User registered successfully");
+            return ResponseEntity.status(HttpStatus.OK).body(authResponse);
         }
         catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            AuthResponse authResponse = new AuthResponse();
+            authResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            authResponse.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(authResponse);
         }
     }
 
